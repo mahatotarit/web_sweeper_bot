@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     commondEnter(event);
   });
 
-  function commondEnter(event){
+  function commondEnter(event) {
     if (event.key === 'Enter') {
       const command = inputElement.value.trim();
 
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       inputElement.value = '';
-      handleCommand(command,false);
+      handleCommand(command, false);
     }
   }
 
-  function handleCommand(command,commond_check) {
+  function handleCommand(command, commond_check) {
     let output;
     switch (command.trim()) {
       case 'help':
@@ -53,9 +53,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (commond_check) {
-      if(terminal_first_time_start){
+      if (terminal_first_time_start) {
         outputElement.innerHTML = `<div><span class="prompt">${terminal_name}</span> ${command}</div>`;
-      }else{
+      } else {
         outputElement.innerHTML += `<div><span class="prompt">${terminal_name}</span> ${command}</div>`;
       }
       terminal_first_time_start = false;
@@ -64,13 +64,41 @@ document.addEventListener('DOMContentLoaded', function () {
     outputElement.innerHTML += `<div>&nbsp; ${output}</div>`;
     outputElement.scrollTop = outputElement.scrollHeight;
   }
-  
+
   document.getElementById('start-btn').addEventListener('click', function () {
-    handleCommand('start',true);
+    handleCommand('start', true);
   });
 
   document.getElementById('stop-btn').addEventListener('click', function () {
-    handleCommand('stop',true);
-  });   
+    handleCommand('stop', true);
+  });
+
+  // =========================== modal ==========================
+  const modal = document.getElementById('settings-modal');
+  const settingsBtn = document.getElementById('settings-btn');
+  const closeModal = document.getElementById('close-modal');
+  const saveBtn = document.getElementById('save-btn');
+
+  settingsBtn.addEventListener('click', function () {
+    modal.style.display = 'block';
+  });
+
+  closeModal.addEventListener('click', function () {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function (event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  });
+
+  saveBtn.addEventListener('click', function () {
+    const formData = new FormData(document.getElementById('settings-form'));
+    const settingsData = {};
+    formData.forEach((value, key) => {settingsData[key] = value;});
+    console.log('Settings Saved:', settingsData);
+    modal.style.display = 'none';
+  });
 
 });
