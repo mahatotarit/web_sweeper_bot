@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac Terminal Design</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="traffic-lights">
+                <span class="close"></span>
+                <span class="minimize"></span>
+                <span class="maximize"></span>
+            </div>
+            <div class="title">Terminal</div>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-output" id="terminal-output">
+            </div>
+            <div class="terminal-input">
+                <span class="prompt">sweeperbot@terminal:~$</span>
+                <input type="text" id="terminal-input" autofocus>
+            </div>
+        </div>
+    </div>
+    <div class="buttons-container">
+        <button class="btn settings-btn" id="settings-btn">
+            <img src="assets/image/svg/setting.svg" alt="Settings" class="settings-icon">Bot Settings
+        </button>
+        <div>
+            <button class="btn" id="start-btn">Start</button>
+            <button class="btn" id="stop-btn">Stop</button> 
+        </div>
+    </div>
+</body>
+</html>
+<script src="assets/js/terminal.js"></script>

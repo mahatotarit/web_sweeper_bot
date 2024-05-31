@@ -1,0 +1,23 @@
+:root{
+    --body_bg:#2e2c29;
+
+    --terminal_bg:#1e1e1e;
+    --terminal_header_bg:#3b3a32;
+    --white:#ffffff;
+    --terminal_body_bg:#1e1e1e;
+
+    --red_dot:#ff5f57;
+    --yellow_dot:#ffbd2e;
+    --green_dot:#28c840;
+    --btn_border_color:black;
+    --black:#000;
+    
+    --prompt_text_color: #00aaff;
+
+    --start_btn_bg:#28c840;
+    --start_btn_hover_bg:#1f9730;
+    --stop_btn_bg:#ff5f57;
+    --stop_btn_hover_bg:#cc4b45;
+    --setting_btn_bg:#ffbd2e;
+    --setting_btn_hover_bg:#cc9523;
+}
