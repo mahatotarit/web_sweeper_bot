@@ -43,10 +43,10 @@ body::-webkit-scrollbar-thumb:hover,
     background-color: var(--terminal_bg);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
 }
 
 .terminal-header {
+    border-radius: 10px 10px 00px 00px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -89,13 +89,13 @@ body::-webkit-scrollbar-thumb:hover,
     padding: 10px;
     color: var(--white);
     background-color: var(--terminal_body_bg);
+    border-radius: 00px 00px 10px 10px;
 }
 .terminal-body *{
    font-size: 0.9rem;
 }
 
 .terminal-output {
-    white-space: pre-wrap;
     height: 400px;
     word-wrap: break-word;
     margin-bottom: 10px;
@@ -177,6 +177,10 @@ body::-webkit-scrollbar-thumb:hover,
 .settings-icon{
     width: 20px;
     height: 20px;
+}
+.page_title{
+    color:var(--white);
+    margin-top:3rem;
 }
 
 /* Modal styles */
