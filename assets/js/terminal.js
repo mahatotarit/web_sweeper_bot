@@ -18,11 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if(event.key === 'Enter' || !key_or_text){
 
-        if (text_commond == 'start'){
-          handleCommand(text_commond);
-        }else if(text_commond == 'stop'){
-          handleCommand(text_commond);
-        }else if(text_commond == 'clear'){
+        if (text_commond === 'start' || text_commond === 'stop' || text_commond === 'clear' || text_commond === 'status'){
           handleCommand(text_commond);
         }
 
@@ -69,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
         inputElement.value = '';
         outputElement.innerHTML = ``;
         return;
+      }else if(command == 'status'){
+        output = status_message;
       }
 
       outputElement.innerHTML += `<div>&nbsp; ${output}</div>`;
