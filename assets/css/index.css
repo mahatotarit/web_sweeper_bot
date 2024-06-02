@@ -83,6 +83,7 @@ body::-webkit-scrollbar-thumb:hover,
     flex-grow: 1;
     text-align: center;
     font-weight: bold;
+    margin-left: -52px;
 }
 
 .terminal-body {
@@ -100,6 +101,12 @@ body::-webkit-scrollbar-thumb:hover,
     word-wrap: break-word;
     margin-bottom: 10px;
     overflow: auto;
+}
+.terminal-output > div {
+   padding-left:15px;
+}
+.terminal-output .prompt{
+    margin-left:-15px;
 }
 
 .terminal-input {

