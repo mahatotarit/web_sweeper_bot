@@ -69,6 +69,7 @@ You can set bot parameters dynamically via URL query parameters. For example:
 If all parameters are present in the URL, you will be prompted to start the bot automatically.
 
 <br>
+
 ## Security Considerations
 
 - **Private Key Security:** Never expose your private key. Ensure the application is served over a secure connection.
